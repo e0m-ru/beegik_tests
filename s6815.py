@@ -1,5 +1,8 @@
 import stepik_test
 
+# https://stepik.org/lesson/810856/step/16?auth=login&unit=816647
+# решение
+
 
 class NonNegativeInteger:
     def __init__(self, name, default=None) -> None:
@@ -23,4 +26,5 @@ class NonNegativeInteger:
             raise AttributeError('Атрибут не найден')
 
 
+# запуск тестов из архива 16
 stepik_test.run(16, {'NonNegativeInteger': NonNegativeInteger})
