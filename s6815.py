@@ -1,6 +1,7 @@
-import stepik_test
+import beegik_tests
 
 # https://stepik.org/lesson/810856/step/16?auth=login&unit=816647
+
 # решение
 
 
@@ -27,4 +28,4 @@ class NonNegativeInteger:
 
 
 # запуск тестов из архива 16
-stepik_test.run(16, {'NonNegativeInteger': NonNegativeInteger})
+beegik_tests.run(16, globals())
