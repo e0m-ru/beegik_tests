@@ -40,8 +40,7 @@ class Test_manager:
             expected = self.tests_files.read(
                 f'{n}.clue').decode('utf_8')
             t = Test(code, expected)
-            t.result = self.capture_exec_output(t, self._context)
-            t.status = t.expected == t.result
+            run_test(t)
             self.__setattr__(f'{n}', t)
 
             if self.__dict__[f'{n}'].status is False:
@@ -49,6 +48,11 @@ class Test_manager:
                     f'{Fore.RED}Failed on test № {n}{Fore.WHITE}\nresult:\n{self.__dict__[str(n)].result}\nanswer:\n{self.__dict__[str(n)].expected}')
                 break
             print(f'Тест №{n}: {Fore.GREEN}passed{Fore.WHITE}')
+
+        def run_test(self, t: Test):
+            t.result = self.capture_exec_output(t, self._context)
+            t.status = t.expected == t.result
+            setattr(t.name, )
 
 
 class io_context:
