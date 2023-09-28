@@ -1,6 +1,5 @@
 import sys
 import io
-import zipfile
 
 
 class io_context:
@@ -19,14 +18,10 @@ class io_context:
         return self.captured_output.getvalue()
 
 
-def capture_output(code: str) -> str:
+def capture_output(code: str, context) -> str:
     """выполняет переданный код, 
     и перенаправляет стандартный вывод в объект IO. 
     возвращает содержимое результат выполнения в виде строки."""
     with io_context() as IO:
-        try:
-            # выполняется с преданным контекстом
-            exec(code, globals()['_context'])
-        except Exception as e:
-            return f'{e}'
-    return IO.getvalue()
+        exec(code, context)
+        return IO.getvalue().strip()
