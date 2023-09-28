@@ -28,4 +28,6 @@ class NonNegativeInteger:
 
 
 # запуск тестов из архива 16
-beegik_tests.run(16, globals())
+tests = beegik_tests.Test_manager(
+    '16.zip', {'NonNegativeInteger': NonNegativeInteger})
+tests.run()
