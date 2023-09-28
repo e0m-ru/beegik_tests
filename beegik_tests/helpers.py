@@ -23,5 +23,8 @@ def capture_output(code: str, context) -> str:
     и перенаправляет стандартный вывод в объект IO. 
     возвращает содержимое результат выполнения в виде строки."""
     with io_context() as IO:
-        exec(code, context)
+        try:
+            exec(code, context)
+        except Exception as e:
+            return e
         return IO.getvalue().strip()
