@@ -45,8 +45,13 @@ class Test_manager:
             self.__setattr__(f'{n}', t)
 
             if self.__dict__[f'{n}'].status is False:
-                print(
-                    f'{Fore.RED}Failed on test № {n}{Fore.WHITE}\nresult:\n{self.__dict__[str(n)].result}\nanswer:\n{self.__dict__[str(n)].expected}')
+                print(f'{Fore.RED}Failed on test №{n}')
+                print(f'{"result":-^30}\n{self.__dict__[str(n)].result}')
+                print(f'{Fore.YELLOW}{"answer":-^30}',
+                      f'\n{self.__dict__[str(n)].expected}')
+                print(f'{Fore.BLUE}{"code":-^30}')
+                print(f'{self.__dict__[str(n)].code.decode("utf_8")}\n\
+                      {Fore.WHITE}')
                 break
             print(f'Тест №{n}: {Fore.GREEN}passed{Fore.WHITE}')
 
