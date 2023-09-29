@@ -5,7 +5,8 @@ from colorama import Fore
 
 
 class Test:
-    def __init__(self, code: str, expected: str) -> None:
+    def __init__(self, name: str, code: str, expected: str) -> None:
+        self.name = name
         self.code = code
         self.expected = expected
 
@@ -39,8 +40,8 @@ class Test_manager:
             code = self.tests_files.read(f'{n}')
             expected = self.tests_files.read(
                 f'{n}.clue').decode('utf_8')
-            t = Test(code, expected)
-            run_test(t)
+            t = Test(str(n), code, expected)
+            self.run_test(t)
             self.__setattr__(f'{n}', t)
 
             if self.__dict__[f'{n}'].status is False:
@@ -49,10 +50,9 @@ class Test_manager:
                 break
             print(f'Тест №{n}: {Fore.GREEN}passed{Fore.WHITE}')
 
-        def run_test(self, t: Test):
-            t.result = self.capture_exec_output(t, self._context)
-            t.status = t.expected == t.result
-            setattr(t.name, )
+    def run_test(self, t: Test):
+        t.result = self.capture_exec_output(t, self._context)
+        t.status = t.expected == t.result
 
 
 class io_context:
