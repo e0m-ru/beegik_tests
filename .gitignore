@@ -1,3 +1,5 @@
-__pycache__
-19.zip
-s6818.py
+**__pycache__**
+*.zip
+s*.py
+.venv*
+.gitignore
