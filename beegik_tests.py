@@ -1,5 +1,6 @@
 import io
 import sys
+import os
 import zipfile
 from colorama import Fore
 
@@ -35,6 +36,8 @@ class Test_manager:
     def run(self):
         """Запускает все тесты из архива.
         """
+        os.system('cls' if os.name == 'nt' else 'clear')
+
         i = range(1, (len(self.tests_files.filelist)//2)+1)
         for n in i:
             code = self.tests_files.read(f'{n}')
