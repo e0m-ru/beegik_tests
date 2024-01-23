@@ -8,28 +8,31 @@ class MultiKeyDict(UserDict):
         self._alias = dict()
 
     def alias(self, key, alias):
-        self._alias.update({alias: key})
+        self._alias[alias] = key
 
     def __getitem__(self, key):
-        key = self.__dict__['_alias'].get(key, key)
-        return self.data.get(key)
+        if key in self:
+            key = self._alias[key]
+        return self.data[key]
 
     def __setitem__(self, key, value):
-        print(self.__getattribute__('alias'))
-        self.data.update({key: value})
+        # key = self._alias[key]
+        if '_alias' in self.__dict__:
+            key = self.__dict__['_alias'].__get__(key, key)
+        self.data[key] = value
 
 
 tests = beegik_tests.Test_manager(
     '13.zip', globals())
 # tests.run()
-multikeydict = MultiKeyDict(x=100, y=[10, 20])
+
+multikeydict = MultiKeyDict(x=100)
 
 multikeydict.alias('x', 'z')
-multikeydict.alias('x', 't')
+del multikeydict['x']
 print(multikeydict['z'])
-multikeydict['t'] += 1
-# print(multikeydict['x'])
-# multikeydict.alias('y', 'z')
-# multikeydict['z'] += [30]
-# print(multikeydict['y'])
-print(multikeydict.__dict__)
+
+try:
+    print(multikeydict['x'])
+except KeyError:
+    print('Ключ отстутствует')
