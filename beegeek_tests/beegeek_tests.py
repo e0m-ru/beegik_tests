@@ -4,14 +4,12 @@ import os
 import zipfile
 from colorama import Fore
 import traceback
+# from config import *
 
-
+DOTS = f"\n{'.'*3}"
 class Test:
     def __init__(self, name: str, code: str, expected: str) -> None:
-        self.name = name
-        self.code = code
-        self.expected = expected
-
+        self.name, self.code, self.expected = name, code, expected
 
 class Test_manager:
     """Принимает два аргумента:\n
@@ -53,14 +51,13 @@ class Test_manager:
             if self.__dict__[f'{n}'].status is False:
                 print(f'Test №{n}: {Fore.RED}failed{Fore.WHITE}')
                 if _verbose:
-                    print(f'{Fore.RED}{"result":-^24}\n{'.'*3} {
-                          self.__dict__[str(n)].result.replace('\n', f'\n{'.'*3} ') if _traceback else ''}')
-                    print(f'{Fore.YELLOW}{"answer":-^24}',
-                          f'\n{'.'*3} {self.__dict__[str(n)].expected.replace('\n', f'\n{'.'*3} ')}{Fore.WHITE}')
+                    print(f'{Fore.RED}{"result":-^24}')
+                    print(f"{self.__dict__[str(n)].result if _traceback else ''}")
+                    print(f'{Fore.YELLOW}{"answer":-^24}')
+                    print(f"{DOTS} {self.__dict__[str(n)].expected}{Fore.WHITE}")
                 if _code:
                     print(f'{" "*4} {Fore.BLUE}{"code":-^24}')
-                    message = self.__dict__[str(n)].code.decode(
-                        "utf_8").replace('\n', f'\n{">"*3} ')
+                    message = self.__dict__[str(n)].code.decode("utf_8")
                     print(f'{">"*3} {message}\n{Fore.WHITE}')
                     print(f"{'':-^24}\n")
             # break
