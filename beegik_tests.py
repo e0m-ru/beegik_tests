@@ -3,6 +3,7 @@ import sys
 import os
 import zipfile
 from colorama import Fore
+import traceback
 
 
 class Test:
@@ -30,15 +31,17 @@ class Test_manager:
             try:
                 exec(test.code, context)
             except Exception as e:
-                return e
+
+                return traceback.format_exc()
             return IO.getvalue().strip()
 
-    def run(self):
-        """Запускает все тесты из архива.
-        """
+    def run(self, number=None, _verbose=False, _traceback=False, _code=False):
+        "Запускает все тесты из архива."
         os.system('cls' if os.name == 'nt' else 'clear')
-
-        i = range(1, (len(self.tests_files.filelist)//2)+1)
+        if number:
+            i = range(number, number+1)
+        else:
+            i = range(1, (len(self.tests_files.filelist)//2)+1)
         for n in i:
             code = self.tests_files.read(f'{n}')
             expected = self.tests_files.read(
@@ -48,15 +51,21 @@ class Test_manager:
             self.__setattr__(f'{n}', t)
 
             if self.__dict__[f'{n}'].status is False:
-                print(f'{Fore.RED}Failed on test №{n}')
-                print(f'{"result":-^30}\n{self.__dict__[str(n)].result}')
-                print(f'{Fore.YELLOW}{"answer":-^30}',
-                      f'\n{self.__dict__[str(n)].expected}')
-                print(f'{Fore.BLUE}{"code":-^30}')
-                print(f'{self.__dict__[str(n)].code.decode("utf_8")}\n\
-                      {Fore.WHITE}')
-                break
-            print(f'Тест №{n}: {Fore.GREEN}passed{Fore.WHITE}')
+                print(f'Test №{n}: {Fore.RED}failed{Fore.WHITE}')
+                if _verbose:
+                    print(f'{Fore.RED}{"result":-^24}\n{'.'*3} {
+                          self.__dict__[str(n)].result.replace('\n', f'\n{'.'*3} ') if _traceback else ''}')
+                    print(f'{Fore.YELLOW}{"answer":-^24}',
+                          f'\n{'.'*3} {self.__dict__[str(n)].expected.replace('\n', f'\n{'.'*3} ')}{Fore.WHITE}')
+                if _code:
+                    print(f'{" "*4} {Fore.BLUE}{"code":-^24}')
+                    message = self.__dict__[str(n)].code.decode(
+                        "utf_8").replace('\n', f'\n{">"*3} ')
+                    print(f'{">"*3} {message}\n{Fore.WHITE}')
+                    print(f"{'':-^24}\n")
+            # break
+            else:
+                print(f'Тест №{n}: {Fore.GREEN}passed{Fore.WHITE}')
 
     def run_test(self, t: Test):
         t.result = self.capture_exec_output(t, self._context)

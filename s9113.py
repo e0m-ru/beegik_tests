@@ -1,44 +1,26 @@
 from collections import UserDict
-import beegik_tests as beegik_tests
+from beegik_tests import Test_manager
 
 
 class MultiKeyDict(UserDict):
-    def __init__(self, *args, **kwargs):
-        self._alias = dict()
-        super().__init__(self, *args, **kwargs)
-
-    def alias(self, key, alias):
-        self._alias[key] = key
-        self._alias[alias] = key
-
-    def __getitem__(self, key):
-        if key in self.__dict__:
-            return self.__dict__[key]
-        elif key in self._alias:
-            key = self._alias[key]
-            return self.data[key]
-        elif (key not in self._alias) and (key in self.data):
-            raise KeyError(key)
-        elif (key in self.data):
-            return self.data[key]
-
-    def __setitem__(self, key, value):
-        if key in self.__dict__:
-            self.__dict__[key] = value
-        elif key in self.data:
-            self.data[key] = value
-        elif key in self._alias:
-            self.data[self._alias[key]] = value
-        super().__setitem__(key, value)
-
-    def __delitem__(self, key):
-        if key in self._alias:
-            self.data[key] = self.data[self._alias[key]]
-            self._alias[self._alias[key]] = key
-            del self._alias[key]
-            # del self.data[key]
+    def __init__(s,*a,**k):s._a={};super().__init__(*a,**k)
+    def alias(s,k,a):s._a[a]=k
+    def __getitem__(s,k):
+        if k in s.data and k in s._a:return s.data[k]
+        return s.data[s._a[k]]
+    def __setitem__(s,k,v):
+        if k in s._a:k=s._a[k]
+        s.data[k],s._a[k]=v,k
+    def __delitem__(s,k):
+        if s._a.get(k)==k:s._a.pop(k)
+        if k in s.data and not any(v==k for v in s._a.values()):s.data.pop(k,None)
 
 
-tests = beegik_tests.Test_manager(
-    '13.zip', globals())
-tests.run()
+if 1:
+    Test_manager('13.zip', {'MultiKeyDict': MultiKeyDict}
+                 ).run(
+        # number=7,
+        # _verbose=True,
+        # _traceback=True,
+        # _code=True
+    )
