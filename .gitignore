@@ -1,6 +1,5 @@
 **__pycache__**
 *.zip
-s*.py
 .venv*
 .gitignore
 .vscode

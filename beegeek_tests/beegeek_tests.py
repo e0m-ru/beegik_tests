@@ -6,22 +6,25 @@ from colorama import Fore
 import traceback
 # from config import *
 
-DOTS = f"\n{'.'*3}"
+
 class Test:
-    def __init__(self, name: str, code: str, expected: str) -> None:
+    def __init__(self, name: str, code, expected: str) -> None:
         self.name, self.code, self.expected = name, code, expected
+        self.result: str | None = None
+        self.status: bool | None = None
+
 
 class Test_manager:
     """Принимает два аргумента:\n
         test_zip - путь к zip файлу с тестами\n
         context - контекст выполнения (globals() например)"""
 
-    def __init__(self, test_zip: str, context: dict = dict) -> None:
+    def __init__(self, test_zip: str, context: dict = dict()) -> None:
         self.tests_files = zipfile.ZipFile(test_zip)
         self._context = context
 
     @classmethod
-    def capture_exec_output(self, test: Test, context: dict) -> str:
+    def capture_exec_output(cls, test: Test, context: dict) -> str:
         """выполняет переданный код, 
         и перенаправляет стандартный вывод в объект IO. 
         возвращает строку результата выполнения."""
@@ -33,7 +36,7 @@ class Test_manager:
                 return traceback.format_exc()
             return IO.getvalue().strip()
 
-    def run(self, number=None, _verbose=False, _traceback=False, _code=False):
+    def run(self, number=None, _verbose=False, _traceback=True, _code=False):
         "Запускает все тесты из архива."
         os.system('cls' if os.name == 'nt' else 'clear')
         if number:
@@ -52,15 +55,15 @@ class Test_manager:
                 print(f'Test №{n}: {Fore.RED}failed{Fore.WHITE}')
                 if _verbose:
                     print(f'{Fore.RED}{"result":-^24}')
-                    print(f"{self.__dict__[str(n)].result if _traceback else ''}")
+                    print(
+                        f"{self.__dict__[str(n)].result if _traceback else ''}")
                     print(f'{Fore.YELLOW}{"answer":-^24}')
-                    print(f"{DOTS} {self.__dict__[str(n)].expected}{Fore.WHITE}")
+                    print(f"{self.__dict__[str(n)].expected}{Fore.WHITE}")
                 if _code:
-                    print(f'{" "*4} {Fore.BLUE}{"code":-^24}')
+                    print(f'{Fore.BLUE}{"code":-^24}')
                     message = self.__dict__[str(n)].code.decode("utf_8")
-                    print(f'{">"*3} {message}\n{Fore.WHITE}')
+                    print(f'{message}{Fore.WHITE}')
                     print(f"{'':-^24}\n")
-            # break
             else:
                 print(f'Тест №{n}: {Fore.GREEN}passed{Fore.WHITE}')
 
